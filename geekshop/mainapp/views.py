@@ -1,12 +1,10 @@
 from django.shortcuts import render
+from .services import *
 
 
 def index(request):
-    context = {'title': 'Geekshop',
-               'content': 'Новые образы и лучшие бренды на GeekShop Store.\
-                    Бесплатная доставка по всему миру! Аутлет: до -70% Собственный бренд. -20% новым покупателям.'}
-    return render(request, template_name='mainapp/index.html', context=context)
+    return render(request, template_name='mainapp/index.html', context=load_content_from_file('index.json'))
 
 
 def products(request):
-    return render(request, template_name='mainapp/products.html')
+    return render(request, template_name='mainapp/products.html', context=load_content_from_file('products.json'))
