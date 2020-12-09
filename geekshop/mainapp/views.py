@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .services import *
+from mainapp.services import load_content_from_file
 
 
 def index(request):
