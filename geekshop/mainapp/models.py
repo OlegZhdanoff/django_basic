@@ -6,6 +6,9 @@ class ProductCategory(models.Model):
     title = models.CharField(max_length=100, unique=True, verbose_name='Название категории')
     short_description = models.CharField(max_length=255, verbose_name='Описание категории', blank=True)
 
+    def get_absolute_url(self):
+        return reverse('category', kwargs={'productcategory_id': self.pk})
+
     def __str__(self):
         return self.title
 
