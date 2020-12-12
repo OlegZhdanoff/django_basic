@@ -19,5 +19,5 @@ import mainapp.urls as mainapp
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(mainapp)),
+    path('', include(mainapp, namespace='mainapp')),
 ]

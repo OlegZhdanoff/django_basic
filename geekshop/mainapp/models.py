@@ -22,7 +22,7 @@ class Products(models.Model):
     photo = models.ImageField(upload_to='products/%Y/%m/%d/', height_field=100, blank=True, verbose_name='Фото')
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
     description = models.TextField(verbose_name='Описание')
-    category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
+    category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, db_constraint=False, default=1)
 
     def __str__(self):
         return self.name

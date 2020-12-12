@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from mainapp.services import load_content_from_file
+from mainapp.services import load_content_from_file, load_product_to_db
 from mainapp.models import Products, ProductCategory
 
 
@@ -20,3 +20,7 @@ def products(request):
 
 def category(request):
     return render(request, 'mainapp/products.html')
+
+
+def import_products(request):
+    load_product_to_db(load_content_from_file('products.json'), Products)
