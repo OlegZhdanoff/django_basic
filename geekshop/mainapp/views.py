@@ -8,8 +8,8 @@ def index(request):
 
 
 def products(request):
-    goods = Products.objects.all()
-    categories = ProductCategory.objects.all()
+    goods = Products.objects.filter(is_visible=True)
+    categories = ProductCategory.objects.filter(is_visible=True)
     content = {
         'title': '- Каталог',
         'product_list': goods,
