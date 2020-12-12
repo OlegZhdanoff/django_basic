@@ -1,6 +1,7 @@
 import json
 from django.conf import settings
 import os
+from django.db import models, IntegrityError
 from mainapp.models import Products, ProductCategory
 
 
@@ -11,18 +12,27 @@ def load_content_from_file(file: str) -> dict:
     return content_json
 
 
-def load_product_to_db(content: dict, AnyClass):
-    fields = AnyClass._meta.fields
+def create_new_obj(obj: dict, AnyModel: models.Model) -> dict:
+    fields = AnyModel._meta.fields
+    new_obj = {}
+    for field in fields:
+        if field.name in obj.keys():
+            new_obj.setdefault(field.name, obj[field.name])
+    return new_obj
 
+
+def load_product_to_db(content: dict, AnyModel: models.Model, CategoriesClass: models.Model):
+    for obj in content['categories']:
+        try:
+            CategoriesClass.objects.create(**create_new_obj(obj, CategoriesClass))
+        except IntegrityError:
+            continue
     for obj in content['objects_list']:
-        new_obj = {}
-        for field in fields:
-            if field.name in obj.keys():
-                print(obj[field.name])
-                new_obj.setdefault(field.name, obj[field.name])
-        AnyClass.objects.create(**new_obj)
-            # if obj[field.name]:
-                # product = Products()
-
+        new_obj = create_new_obj(obj, AnyModel)
+        new_obj['category'] = CategoriesClass.objects.get(title=new_obj['category'])
+        try:
+            AnyModel.objects.create(**new_obj)
+        except IntegrityError:
+            continue
 
 

@@ -18,9 +18,17 @@ def products(request):
     return render(request, template_name='mainapp/products.html', context=content)
 
 
-def category(request):
-    return render(request, 'mainapp/products.html')
+def get_category(request, category_id):
+    goods = Products.objects.filter(is_visible=True, category=category_id)
+    categories = ProductCategory.objects.filter(is_visible=True)
+    content = {
+        'title': '- Каталог',
+        'product_list': goods,
+        'categories': categories
+    }
+    return render(request, 'mainapp/products.html', context=content)
 
 
 def import_products(request):
-    load_product_to_db(load_content_from_file('products.json'), Products)
+    load_product_to_db(load_content_from_file('products.json'), Products, ProductCategory)
+    return render(request, template_name='mainapp/products.html')

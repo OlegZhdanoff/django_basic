@@ -8,7 +8,7 @@ class ProductCategory(models.Model):
     is_visible = models.BooleanField(default=False, verbose_name='Видимость')
 
     def get_absolute_url(self):
-        return reverse('category', kwargs={'productcategory_id': self.pk})
+        return reverse('mainapp:category', kwargs={'category_id': self.pk})
 
     def __str__(self):
         return self.title

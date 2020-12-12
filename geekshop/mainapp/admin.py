@@ -25,23 +25,24 @@ from django.conf.urls import url
 
 
 class ProductCategoryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'short_description')
+    list_display = ('id', 'title', 'short_description', 'is_visible')
     list_display_links = ('id', 'title')
     search_fields = ('title',)
+    list_editable = ('is_visible',)
 
 
 class ProductsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'price', 'category', 'button')
+    list_display = ('id', 'name', 'price', 'category', 'is_visible')
     list_display_links = ('id', 'name')
     search_fields = ('name', 'category')
-    list_filter = ('category',)
-    list_editable = ('price', 'category')
+    list_filter = ('category', 'is_visible')
+    list_editable = ('price', 'category', 'is_visible')
 
     # def get_urls(self):
     #     urls = super(MenuOrderAdmin, self).get_urls()
 
-    def button(self, obj):
-        return mark_safe(f'<a class="button" >Кнопка</a>')
+    # def button(self, obj):
+    #     return mark_safe(f'<a class="button" >Кнопка</a>')
 
 
 admin.site.register(ProductCategory, ProductCategoryAdmin)
