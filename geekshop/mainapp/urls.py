@@ -3,6 +3,7 @@ from mainapp.views import index, products, import_products, get_category
 
 app_name = 'mainapp'
 
+
 urlpatterns = [
     path('', index, name='index'),
     path('products/', products, name='products'),
