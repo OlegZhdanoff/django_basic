@@ -11,7 +11,7 @@ def products(request):
     goods = Products.objects.filter(is_visible=True)
     categories = ProductCategory.objects.filter(is_visible=True)
     content = {
-        'title': '- Каталог',
+        'title': 'Каталог',
         'product_list': goods,
         'categories': categories
     }
@@ -22,7 +22,7 @@ def get_category(request, category_id):
     goods = Products.objects.filter(is_visible=True, category=category_id)
     categories = ProductCategory.objects.filter(is_visible=True)
     content = {
-        'title': '- Каталог',
+        'title': 'Каталог',
         'product_list': goods,
         'categories': categories
     }
