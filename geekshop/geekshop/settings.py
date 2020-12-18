@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'mainapp',
+    'authapp',
 ]
 
 MIDDLEWARE = [
@@ -128,3 +129,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 CONTENTFILES_DIR = os.path.join(BASE_DIR, 'content')
+
+AUTH_USER_MODEL = 'authapp.ShopUser'
+
