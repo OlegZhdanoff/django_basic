@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(mainapp, namespace='mainapp')),
     path('auth/', include('authapp.urls', namespace='auth')),
+    path('baskets/', include('basketapp.urls', namespace='baskets')),
 ]

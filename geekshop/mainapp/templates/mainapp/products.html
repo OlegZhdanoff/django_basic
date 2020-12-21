@@ -1,5 +1,5 @@
 {% extends 'mainapp/base.html' %}
-{% load staticfiles %}
+{% load static %}
 {% block title %}
     {{ title }}
 {% endblock %}
@@ -73,7 +73,7 @@
                             <p class="card-text">{{ item.description }}</p>
                         </div>
                         <div class="card-footer text-center">
-                            <button type="button" class="btn btn-outline-success">Отправить в корзину</button>
+                            <a href="{% url 'baskets:basket_add' item.id %}"><button type="button" class="btn btn-outline-success">Отправить в корзину</button></a>
                         </div>
                     </div>
                 </div>
