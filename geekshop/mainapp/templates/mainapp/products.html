@@ -62,7 +62,11 @@
                     <div class="card h-100">
                         <a href="{{ item.link }}">
                             <img class="card-img-top"
-                                 src="{% static item.image_lnk %}"
+                                 {% if item.photo %}
+                                 src="{{ item.photo.url }}"
+                                 {% else %}
+                                 src="#"
+                                 {% endif %}
                                  alt="">
                         </a>
                         <div class="card-body">

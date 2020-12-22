@@ -20,7 +20,7 @@ class ProductCategory(models.Model):
 
 class Products(models.Model):
     name = models.CharField(max_length=150, unique=True, verbose_name='Название')
-    photo = models.ImageField(upload_to='products/%Y/%m/%d/', height_field=100, blank=True, verbose_name='Фото')
+    photo = models.ImageField(upload_to='products/', blank=True, verbose_name='Фото')
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
     description = models.TextField(verbose_name='Описание')
     is_visible = models.BooleanField(default=False, verbose_name='Видимость')
