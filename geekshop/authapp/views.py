@@ -1,9 +1,9 @@
 from django.shortcuts import render, HttpResponseRedirect
-from django.contrib import auth
+from django.contrib import auth, messages
 from django.urls import reverse
-from django.contrib import messages
 
-from authapp.forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserEditForm
+from basketapp.models import Basket
+from authapp.forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserEditForm, ShopUserProfileForm
 
 
 def login(request):
@@ -54,3 +54,21 @@ def edit(request):
     content = {'title': title, 'form': form}
 
     return render(request, 'authapp/edit.html', content)
+
+
+def profile(request):
+
+    if request.method == 'POST':
+        form = ShopUserProfileForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('auth:profile'))
+    else:
+        form = ShopUserProfileForm(instance=request.user)
+
+    baskets = Basket.objects.filter(user=request.user)
+    total_qty = sum([basket.quantity for basket in baskets])
+    title = 'Профиль ' + request.user.username
+    content = {'title': title, 'form': form, 'baskets': baskets, 'total_qty': total_qty}
+    return render(request, 'authapp/profile.html', content)
+

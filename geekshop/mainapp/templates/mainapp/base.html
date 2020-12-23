@@ -1,4 +1,4 @@
-{% load staticfiles %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -38,7 +38,7 @@
                 </li>
                 {% if user.is_authenticated %}
                 <li>
-                    <a class="nav-link" href="{% url 'auth:edit' %}">
+                    <a class="nav-link" href="{% url 'auth:profile' %}">
                         {{ user.first_name|default:'Пользователь' }}
                         </a>
                     </a>
