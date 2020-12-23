@@ -68,7 +68,8 @@ def profile(request):
 
     baskets = Basket.objects.filter(user=request.user)
     total_qty = sum([basket.quantity for basket in baskets])
+    total_sum = sum([basket.sum() for basket in baskets])
     title = 'Профиль ' + request.user.username
-    content = {'title': title, 'form': form, 'baskets': baskets, 'total_qty': total_qty}
+    content = {'title': title, 'form': form, 'baskets': baskets, 'total_qty': total_qty, 'total_sum': total_sum}
     return render(request, 'authapp/profile.html', content)
 
