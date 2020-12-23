@@ -13,6 +13,9 @@
             <span class="text-muted">{{ basket.quantity }} шт.</span>
             <span class="text-muted">{{ basket.sum }} руб.</span>
             <span class="text-muted">
+                <a href="{% url 'baskets:basket_add' basket.product.id %}">
+                            <i class="fas fa-cart-plus"></i>
+                        </a>
                         <a href="{% url 'baskets:basket_remove' basket.id %}">
                             <i class="fas fa-trash"></i>
                         </a>
