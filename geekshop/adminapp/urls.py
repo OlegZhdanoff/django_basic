@@ -12,6 +12,6 @@ urlpatterns = [
     path('users/remove/<int:user_id>/', adminapp.admin_users_remove, name='admin_users_remove'),
     path('products/', adminapp.admin_products, name='admin_products'),
     path('products/create/', adminapp.admin_products_create, name='admin_products_create'),
-    path('products/update/<int:user_id>/', adminapp.admin_products_update, name='admin_products_update'),
-    path('products/remove/<int:user_id>/', adminapp.admin_products_remove, name='admin_products_remove'),
+    path('products/update/<int:product_id>/', adminapp.admin_products_update, name='admin_products_update'),
+    path('products/remove/<int:product_id>/', adminapp.admin_products_remove, name='admin_products_remove'),
 ]

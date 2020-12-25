@@ -34,22 +34,22 @@
                     {% for product in products %}
                         <tr>
                             <td>
-                                <a href="{% url 'admin_staff:admin_products_update' product.id %}" style="color: dodgerblue">
-                                    {{ user.username }}
-                                </a>
+                                <img width="50" height="50"
+                                     {% if product.photo %}
+                                 src="{{ product.photo.url }}"
+                                 {% else %}
+                                 src="#"
+                                 {% endif %}
+                                     class="img-thumbnail" alt="Photo">
                             </td>
-                            <td>{{ user.first_name }}</td>
-                            <td>{{ user.last_name }}</td>
-                            <td>{{ user.email }}</td>
+                            <td><a href="{% url 'admin_staff:admin_products_update' product.id %}" style="color: dodgerblue">
+                                    {{ product.name }}
+                                </a></td>
+                            <td>{{ product.price }}</td>
+                            <td>{{ product.description|truncatewords:10 }}</td>
+                            <td>{{ product.category.title }}</td>
                             <td class="text-center">
-                                {% if user.is_staff %}
-                                    <i class="fas fa-check-circle"></i>
-                                {% else %}
-                                    <i class="fas fa-times-circle"></i>
-                                {% endif %}
-                            </td>
-                            <td class="text-center">
-                                {% if user.is_active %}
+                                {% if product.is_visible %}
                                     <i class="fas fa-check-circle"></i>
                                 {% else %}
                                     <i class="fas fa-times-circle"></i>
@@ -63,8 +63,8 @@
         </div>
         <div class="card-footer">
             <button class="btn btn-success">
-                <a href="{% url 'admin_staff:admin_users_create' %}" style="color: white;">
-                    Создать пользователя
+                <a href="{% url 'admin_staff:admin_products_create' %}" style="color: white;">
+                    Создать новый товар
                 </a>
             </button>
         </div>
