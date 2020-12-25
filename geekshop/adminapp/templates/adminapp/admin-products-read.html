@@ -32,7 +32,11 @@
                     </tfoot>
                     <tbody>
                     {% for product in products %}
-                        <tr>
+                        {% if product.is_visible %}
+                            <tr>
+                        {% else %}
+                            <tr bgcolor="#ddd">
+                        {% endif %}
                             <td>
                                 <img width="50" height="50"
                                      {% if product.photo %}

@@ -6,7 +6,7 @@ from authapp.models import ShopUser
 from adminapp.forms import UserAdminRegisterForm, UserAdminProfileForm
 
 from mainapp.models import Products
-from mainapp.forms import ProductCreateForm
+from mainapp.forms import ProductCreateForm, ProductUpdateForm
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -93,23 +93,22 @@ def admin_products_create(request):
 @user_passes_test(lambda u: u.is_superuser)
 def admin_products_update(request, product_id):
     # U - Update
-    user = ShopUser.objects.get(id=product_id)
+    product = Products.objects.get(id=product_id)
     if request.method == 'POST':
-        form = UserAdminProfileForm(data=request.POST, files=request.FILES, instance=user)
+        form = ProductCreateForm(data=request.POST, files=request.FILES, instance=product)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('admin_staff:admin_users'))
+            return HttpResponseRedirect(reverse('admin_staff:admin_products'))
     else:
-        form = UserAdminProfileForm(instance=user)
+        form = ProductCreateForm(instance=product)
 
-    context = {'form': form, 'user': user}
-    return render(request, 'adminapp/admin-users-update-delete.html', context)
+    context = {'form': form, 'product': product}
+    return render(request, 'adminapp/admin-products-update-delete.html', context)
 
 
 @user_passes_test(lambda u: u.is_superuser)
-def admin_products_remove(request, products_id):
-    user = ShopUser.objects.get(id=products_id)
-    # user.delete()
-    user.is_active = False
-    user.save()
-    return HttpResponseRedirect(reverse('admin_staff:admin_users'))
+def admin_products_remove(request, product_id):
+    product = Products.objects.get(id=product_id)
+    product.is_visible = False
+    product.save()
+    return HttpResponseRedirect(reverse('admin_staff:admin_products'))

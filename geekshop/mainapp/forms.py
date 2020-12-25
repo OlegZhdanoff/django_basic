@@ -21,3 +21,16 @@ class ProductCreateForm(forms.ModelForm):
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
         self.fields['photo'].widget.attrs['class'] = 'custom-file-input'
+
+
+class ProductUpdateForm(forms.ModelForm):
+    class Meta:
+        model = models.Products
+        # fields = '__all__'
+        fields = ('photo', 'name', 'price', 'description', 'category', 'is_visible')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+        self.fields['photo'].widget.attrs['class'] = 'custom-file-input'
