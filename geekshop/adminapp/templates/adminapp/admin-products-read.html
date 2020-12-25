@@ -46,7 +46,7 @@
                                     {{ product.name }}
                                 </a></td>
                             <td>{{ product.price }}</td>
-                            <td>{{ product.description|truncatewords:10 }}</td>
+                            <td>{{ product.description|truncatewords:50 }}</td>
                             <td>{{ product.category.title }}</td>
                             <td class="text-center">
                                 {% if product.is_visible %}

@@ -6,6 +6,7 @@ from authapp.models import ShopUser
 from adminapp.forms import UserAdminRegisterForm, UserAdminProfileForm
 
 from mainapp.models import Products
+from mainapp.forms import ProductCreateForm
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -77,16 +78,16 @@ def admin_products(request):
 def admin_products_create(request):
     # C - Create
     if request.method == 'POST':
-        form = UserAdminRegisterForm(data=request.POST, files=request.FILES)
+        form = ProductCreateForm(data=request.POST, files=request.FILES)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('admin_staff:admin_users'))
+            return HttpResponseRedirect(reverse('admin_staff:admin_products'))
         else:
             print(form.errors)
     else:
-        form = UserAdminRegisterForm()
+        form = ProductCreateForm()
     context = {'form': form}
-    return render(request, 'adminapp/admin-users-create.html', context)
+    return render(request, 'adminapp/admin-products-create.html', context)
 
 
 @user_passes_test(lambda u: u.is_superuser)
