@@ -5,8 +5,8 @@ from django.contrib.auth.decorators import user_passes_test
 from authapp.models import ShopUser
 from adminapp.forms import UserAdminRegisterForm, UserAdminProfileForm
 
-from mainapp.models import Products
-from mainapp.forms import ProductCreateForm, ProductUpdateForm
+from mainapp.models import Products, ProductCategory
+from mainapp.forms import ProductCreateForm, ProductCategoryForm
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -112,3 +112,52 @@ def admin_products_remove(request, product_id):
     product.is_visible = False
     product.save()
     return HttpResponseRedirect(reverse('admin_staff:admin_products'))
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def admin_product_category(request):
+    # R - Read
+    context = {
+        'categories': ProductCategory.objects.all(),
+    }
+    return render(request, 'adminapp/admin-product_category-read.html', context)
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def admin_product_category_create(request):
+    # C - Create
+    if request.method == 'POST':
+        form = ProductCategoryForm(data=request.POST, files=request.FILES)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('admin_staff:admin_product_category'))
+        else:
+            print(form.errors)
+    else:
+        form = ProductCategoryForm()
+    context = {'form': form}
+    return render(request, 'adminapp/admin-product_category-create.html', context)
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def admin_product_category_update(request, category_id):
+    # U - Update
+    category = ProductCategory.objects.get(id=category_id)
+    if request.method == 'POST':
+        form = ProductCategoryForm(data=request.POST, files=request.FILES, instance=category)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('admin_staff:admin_products'))
+    else:
+        form = ProductCategoryForm(instance=category)
+
+    context = {'form': form, 'category': category}
+    return render(request, 'adminapp/admin-product_category-update-delete.html', context)
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def admin_product_category_remove(request, category_id):
+    product_category = ProductCategory.objects.get(id=category_id)
+    product_category.is_visible = False
+    product_category.save()
+    return HttpResponseRedirect(reverse('admin_staff:admin_product_category'))
