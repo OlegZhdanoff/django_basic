@@ -134,3 +134,4 @@ CONTENTFILES_DIR = os.path.join(BASE_DIR, 'content')
 
 AUTH_USER_MODEL = 'authapp.ShopUser'
 
+ADMIN_PAGE_ELEMS = 3
