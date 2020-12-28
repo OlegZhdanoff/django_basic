@@ -13,6 +13,7 @@ from adminapp.forms import UserAdminRegisterForm, UserAdminProfileForm
 
 from mainapp.models import Products, ProductCategory
 from mainapp.forms import ProductCreateForm, ProductCategoryForm
+from django.conf import settings
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -53,6 +54,10 @@ class UsersCreateView(CreateView, UserPassesTest):
 class UsersListView(ListView, UserPassesTest):
     model = ShopUser
     template_name = 'adminapp/admin-users-read.html'
+    paginate_by = settings.ADMIN_PAGE_ELEMS
+
+    def get_queryset(self):
+        return ShopUser.objects.all().order_by('username')
 
 
 # @user_passes_test(lambda u: u.is_superuser)
@@ -116,6 +121,10 @@ class UserDeleteView(DeleteView, UserPassesTest):
 class ProductListView(ListView, UserPassesTest):
     model = Products
     template_name = 'adminapp/admin-products-read.html'
+    paginate_by = settings.ADMIN_PAGE_ELEMS
+
+    def get_queryset(self):
+        return Products.objects.all().order_by('name')
 
 
 class ProductCreateView(CreateView, UserPassesTest):
@@ -147,6 +156,10 @@ class ProductDeleteView(DeleteView, UserPassesTest):
 class CategoryListView(ListView, UserPassesTest):
     model = ProductCategory
     template_name = 'adminapp/admin-product_category-read.html'
+    paginate_by = settings.ADMIN_PAGE_ELEMS
+
+    def get_queryset(self):
+        return ProductCategory.objects.all().order_by('title')
 
 
 class CategoryCreateView(CreateView, UserPassesTest):

@@ -2,6 +2,7 @@ from django.shortcuts import render
 from mainapp.services import load_content_from_file, load_product_to_db
 from mainapp.models import Products, ProductCategory
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.conf import settings
 
 
 def index(request):
@@ -15,7 +16,7 @@ def products(request, category_id=6, page=1):
         goods = Products.objects.filter(is_visible=True).order_by('price')
 
     categories = ProductCategory.objects.filter(is_visible=True)
-    paginator = Paginator(goods, 3)
+    paginator = Paginator(goods, settings.PAGE_ELEMS)
     try:
         goods_paginator = paginator.page(page)
     except PageNotAnInteger:
