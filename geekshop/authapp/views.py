@@ -80,6 +80,15 @@ class UserProfileView(UpdateView):
     success_url = reverse_lazy('mainapp:index')
     template_name = 'authapp/profile.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        baskets = Basket.objects.filter(user=self.request.user)
+        context['title'] = 'Профиль ' + self.request.user.username
+        context['baskets'] = baskets
+        context['total_qty'] = baskets.first().total_qty()
+        context['total_sum'] = baskets.first().total_sum()
+        return context
+
     # def __init__(self, *args, **kwargs):
     #     print(self.success_url)
     #     super().__init__(*args, **kwargs)
