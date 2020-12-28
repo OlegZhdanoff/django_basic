@@ -57,7 +57,7 @@
             </div>
 
             <div class="row">
-                {% for item in product_list %}
+                {% for item in page_obj %}
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="card h-100">
                         <a href="{{ item.link }}">
@@ -87,23 +87,23 @@
             <!-- /.row -->
             <nav aria-label="Page navigation example">
                     <ul class="pagination justify-content-center">
-                        <li class="page-item {% if not product_list.has_previous %} disabled {% endif %}">
+                        <li class="page-item {% if not page_obj.has_previous %} disabled {% endif %}">
                             <a class="page-link"
-                               href="{% if product_list.has_previous %} {% url 'mainapp:page' category_id product_list.previous_page_number %} {% else %} # {% endif %}">
+                               href="{% if page_obj.has_previous %}?page={{page_obj.previous_page_number}}{% else %} # {% endif %}">
                                 Previous
                             </a>
                         </li>
-                        {% for page in product_list.paginator.page_range %}
+                        {% for page in paginator.page_range %}
                             <li class="page-item">
                                 <a class="page-link"
-                                   href="{% url 'mainapp:page' category_id page %}">
+                                   href="?page={{page}}">
                                     {{ page }}
                                 </a>
                             </li>
                         {% endfor %}
-                        <li class="page-item {% if not product_list.has_next %} disabled {% endif %}">
+                        <li class="page-item {% if not page_obj.has_next %} disabled {% endif %}">
                             <a class="page-link"
-                               href="{% if product_list.has_next %} {% url 'mainapp:page' category_id product_list.next_page_number %} {% else %} # {% endif %}">
+                               href="{% if page_obj.has_next %}?page={{page_obj.next_page_number}}{% else %} # {% endif %}">
                                 Next
                             </a>
                         </li>

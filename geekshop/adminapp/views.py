@@ -1,5 +1,5 @@
 from django.shortcuts import render, HttpResponseRedirect
-from django.urls import reverse
+# from django.urls import reverse
 from django.contrib.auth.decorators import user_passes_test
 from django.views.generic.base import View
 
