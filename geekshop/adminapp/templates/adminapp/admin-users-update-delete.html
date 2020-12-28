@@ -1,9 +1,18 @@
 {% extends 'adminapp/base.html' %}
 
 {% block content %}
-    <h1 class="mt-4">Редактирование пользователя | {{ user.username }}</h1>
+    <h1 class="mt-4">Редактирование пользователя | {{ object.username }}</h1>
+{% if form.errors %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert"
+                 style="margin-top: 50px;">
+                {{ form.errors|escape }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endif %}
     <div class="card-body">
-        <form action="{% url 'admin_staff:admin_users_update' user.id %}" method="post" enctype="multipart/form-data">
+        <form action="{% url 'admin_staff:admin_users_update' object.id %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-row">
                 <div class="col-lg-6">
@@ -47,9 +56,10 @@
         </form>
         <div class="row">
             <div class="col-lg-12" style="margin-top: 33px;">
-                <a href="{% url 'admin_staff:admin_users_remove' user.id %}">
-                    <input class="btn btn-danger btn-block" type="submit" value="Удалить">
-                </a>
+                <form action="{% url 'admin_staff:admin_users_remove' object.id %}" method="post">
+                    {% csrf_token %}
+                    <input class="btn btn-danger btn-block" type="submit" value="Удалить {{object.username}}">
+                </form>
             </div>
         </div>
     </div>
