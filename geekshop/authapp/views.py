@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.core.mail import send_mail
 from django.shortcuts import render, HttpResponseRedirect
 from django.contrib import auth, messages
 from django.urls import reverse
@@ -8,6 +10,8 @@ from django.views.generic.edit import CreateView, UpdateView
 from basketapp.models import Basket
 from authapp.forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserEditForm, ShopUserProfileForm
 from authapp.models import ShopUser
+
+from django.shortcuts import get_object_or_404
 
 
 class UserLoginView(LoginView):
@@ -33,12 +37,50 @@ class UserLoginView(LoginView):
 #     return render(request, 'authapp/login.html', context)
 
 
+def verify(request, email, activation_key):
+    try:
+        user = ShopUser.objects.get(email=email)
+        # temp_key = user.activation_key
+        if user.activation_key == activation_key and not user.is_activation_key_expired():
+            user.is_active = True
+            user.activation_key = None
+            user.save()
+        return render(request, 'authapp/verification.html')
+
+    except Exception as e:
+        return HttpResponseRedirect(reverse('auth:login'))
+
+
+
 class UserRegisterView(CreateView):
     model = ShopUser
     template_name = 'authapp/register.html'
     success_url = reverse_lazy('auth:login')
     form_class = ShopUserRegisterForm
 
+    # def post(self, request, *args, **kwargs):
+    #     """
+    #     Handle POST requests: instantiate a form instance with the passed
+    #     POST variables and then check if it's valid.
+    #     """
+    #     form = self.get_form()
+    #     if form.is_valid():
+    #         return self.form_valid(form)
+    #     else:
+    #         return self.form_invalid(form)
+
+    def form_valid(self, form):
+        """If the form is valid, save the associated model."""
+        self.object = form.save()
+        self.send_verify_email()
+        return super().form_valid(form)
+
+    def send_verify_email(self):
+        verify_link = reverse('auth:verify', args=[self.object.email, self.object.activation_key])
+        subject = f'Подтверждение учетной записи {self.object.username}'
+        message = f'Для подтверждения нажмите ссылку {settings.DOMAIN}{verify_link}'
+
+        return send_mail(subject, message, settings.EMAIL_HOST_USER, [self.object.email], fail_silently=False)
 
 # def register(request):
 #     if request.method == 'POST':

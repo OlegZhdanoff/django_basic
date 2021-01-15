@@ -139,8 +139,13 @@ PRODUCT_PAGE_ELEMS = 2
 
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = '25'
-# EMAIL_HOST_USER = 'testuser@local'
-# EMAIL_HOST_PASSWORD = '123'
+EMAIL_HOST_USER = 'testuser@local'
+EMAIL_HOST_PASSWORD = '123'
 EMAIL_USE_SSL = False
 
-EMAIL_HOST_USER, EMAIL_HOST_PASSWORD = None, None
+# EMAIL_HOST_USER, EMAIL_HOST_PASSWORD = None, None
+
+DOMAIN = 'http://localhost:8000'
+
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = 'tmp/email-messages/'
