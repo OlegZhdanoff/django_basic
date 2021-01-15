@@ -37,19 +37,20 @@ class UserLoginView(LoginView):
 #     return render(request, 'authapp/login.html', context)
 
 
+# можно ли реализовать этот контроллер через CBV?
 def verify(request, email, activation_key):
     try:
+        # здесь почему то не могу использовать get_object_or_404, ругается что нет такого метода
         user = ShopUser.objects.get(email=email)
-        # temp_key = user.activation_key
         if user.activation_key == activation_key and not user.is_activation_key_expired():
             user.is_active = True
             user.activation_key = None
             user.save()
+            auth.login(request, user)
         return render(request, 'authapp/verification.html')
 
     except Exception as e:
         return HttpResponseRedirect(reverse('auth:login'))
-
 
 
 class UserRegisterView(CreateView):
@@ -124,11 +125,16 @@ class UserProfileView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        baskets = Basket.objects.filter(user=self.request.user)
+        # baskets = Basket.objects.filter(user=self.request.user)
         context['title'] = 'Профиль ' + self.request.user.username
-        context['baskets'] = baskets
-        context['total_qty'] = baskets.first().total_qty()
-        context['total_sum'] = baskets.first().total_sum()
+        # if baskets:
+        #     context['baskets'] = baskets
+        #     context['total_qty'] = baskets.first().total_qty()
+        #     context['total_sum'] = baskets.first().total_sum()
+        # else:
+        #     context['baskets'] = ''
+        #     context['total_qty'] = ''
+        #     context['total_sum'] = ''
         return context
 
     # def __init__(self, *args, **kwargs):

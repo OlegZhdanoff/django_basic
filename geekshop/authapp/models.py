@@ -6,7 +6,8 @@ from django.utils import timezone
 
 
 class ShopUser(AbstractUser):
-    avatar = models.ImageField(upload_to='user_avatars', blank=True, verbose_name='Аватар')
+    avatar = models.ImageField(upload_to='user_avatars', blank=True, verbose_name='Аватар',
+                               default='/user_avatars/4x4.jpg')
     # age = models.PositiveIntegerField(verbose_name='Возраст', default=18)
     birthday = models.DateField(verbose_name='День рождения', default=timezone.now)
     activation_key = models.CharField(max_length=128, blank=True, null=True)
