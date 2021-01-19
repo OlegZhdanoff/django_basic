@@ -1,0 +1,18 @@
+{% extends 'authapp/base.html' %}
+{% load static %}
+
+{% block content %}
+
+  {% if user.is_active %}
+    <h3>Поздравляем!</h3>
+    <br>
+    <h4>Пользователь {{user.username}} подтвержден.</h4>
+  {% else %}
+    <h3>Верификация не пройдена. {{user.username}} {{user.is_active}}</h3>
+  {% endif %}
+  <br>
+  <button class="btn btn-round form-control">
+    <a href="{% url 'mainapp:index' %}" class="">на главную</a>
+  </button>
+
+{% endblock %}

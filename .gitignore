@@ -221,3 +221,9 @@ cython_debug/
 !/media/
 .venv/
 /venv/
+!/geekshop/geekshop/vk.json
+geekshop/authapp/migrations/0002_auto_20210115_0350.py
+geekshop/authapp/migrations/0003_auto_20210115_2059.py
+geekshop/authapp/migrations/0004_auto_20210115_2101.py
+geekshop/content/
+geekshop/geekshop/vk.json

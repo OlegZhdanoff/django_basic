@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.core.mail import send_mail
 from django.shortcuts import render, HttpResponseRedirect
 from django.contrib import auth, messages
 from django.urls import reverse
@@ -6,8 +8,11 @@ from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView
 
 from basketapp.models import Basket
-from authapp.forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserEditForm, ShopUserProfileForm
-from authapp.models import ShopUser
+from authapp.forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserEditForm, ShopUserProfileForm, \
+    ShopUserProfileEditForm
+from authapp.models import ShopUser, ShopUserProfile
+
+from django.shortcuts import get_object_or_404
 
 
 class UserLoginView(LoginView):
@@ -33,12 +38,51 @@ class UserLoginView(LoginView):
 #     return render(request, 'authapp/login.html', context)
 
 
+# можно ли реализовать этот контроллер через CBV?
+def verify(request, email, activation_key):
+    try:
+        # здесь почему то не могу использовать get_object_or_404, ругается что нет такого метода
+        user = ShopUser.objects.get(email=email)
+        if user.activation_key == activation_key and not user.is_activation_key_expired():
+            user.is_active = True
+            user.activation_key = None
+            user.save()
+            auth.login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+        return render(request, 'authapp/verification.html')
+
+    except Exception as e:
+        return HttpResponseRedirect(reverse('auth:login'))
+
+
 class UserRegisterView(CreateView):
     model = ShopUser
     template_name = 'authapp/register.html'
     success_url = reverse_lazy('auth:login')
     form_class = ShopUserRegisterForm
 
+    # def post(self, request, *args, **kwargs):
+    #     """
+    #     Handle POST requests: instantiate a form instance with the passed
+    #     POST variables and then check if it's valid.
+    #     """
+    #     form = self.get_form()
+    #     if form.is_valid():
+    #         return self.form_valid(form)
+    #     else:
+    #         return self.form_invalid(form)
+
+    def form_valid(self, form):
+        """If the form is valid, save the associated model."""
+        self.object = form.save()
+        self.send_verify_email()
+        return super().form_valid(form)
+
+    def send_verify_email(self):
+        verify_link = reverse('auth:verify', args=[self.object.email, self.object.activation_key])
+        subject = f'Подтверждение учетной записи {self.object.username}'
+        message = f'Для подтверждения нажмите ссылку {settings.DOMAIN}{verify_link}'
+
+        return send_mail(subject, message, settings.EMAIL_HOST_USER, [self.object.email], fail_silently=False)
 
 # def register(request):
 #     if request.method == 'POST':
@@ -74,39 +118,49 @@ def edit(request):
     return render(request, 'authapp/edit.html', content)
 
 
-class UserProfileView(UpdateView):
-    model = ShopUser
-    form_class = ShopUserProfileForm
-    success_url = reverse_lazy('mainapp:index')
-    template_name = 'authapp/profile.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        baskets = Basket.objects.filter(user=self.request.user)
-        context['title'] = 'Профиль ' + self.request.user.username
-        context['baskets'] = baskets
-        context['total_qty'] = baskets.first().total_qty()
-        context['total_sum'] = baskets.first().total_sum()
-        return context
-
-    # def __init__(self, *args, **kwargs):
-    #     print(self.success_url)
-    #     super().__init__(*args, **kwargs)
-
-
-# def profile(request):
+# class UserProfileView(UpdateView):
+#     model = ShopUser
+#     form_class = ShopUserProfileForm
+#     success_url = reverse_lazy('mainapp:index')
+#     template_name = 'authapp/profile.html'
 #
-#     if request.method == 'POST':
-#         form = ShopUserProfileForm(request.POST, request.FILES, instance=request.user)
-#         if form.is_valid():
-#             form.save()
-#             return HttpResponseRedirect(reverse('auth:profile'))
-#     else:
-#         form = ShopUserProfileForm(instance=request.user)
 #
-#     baskets = Basket.objects.filter(user=request.user)
-#     title = 'Профиль ' + request.user.username
-#     content = {'title': title, 'form': form, 'baskets': baskets, 'total_qty': baskets.first().total_qty(), 'total_sum':
-#         baskets.first().total_sum()}
-#     return render(request, 'authapp/profile.html', content)
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['title'] = 'Профиль ' + self.request.user.username
+#         context['profile_form'] = ShopUserProfileEditForm(self.request.POST, instance=self.request.user.shopuserprofile)
+#         return context
+
+    # def post(self, request, *args, **kwargs):
+    #     self.object = self.get_object()
+    #     return super().post(request, *args, **kwargs)
+    #
+    # def post(self, request, *args, **kwargs):
+    #     """
+    #     Handle POST requests: instantiate a form instance with the passed
+    #     POST variables and then check if it's valid.
+    #     """
+    #     profile_form = ShopUserProfileEditForm(self.request.POST, instance=self.request.user.shopuserprofile)
+    #     # and profile_form.is_valid():
+    #     form = self.get_form()
+    #     if form.is_valid():
+    #         return self.form_valid(form)
+    #     else:
+    #         return self.form_invalid(form)
+
+
+def profile(request):
+
+    if request.method == 'POST':
+        form = ShopUserProfileForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('auth:profile'))
+    else:
+        form = ShopUserProfileForm(instance=request.user)
+
+    # baskets = Basket.objects.filter(user=request.user)
+    title = 'Профиль ' + request.user.username
+    content = {'title': title, 'form': form}
+    return render(request, 'authapp/profile.html', content)
 
