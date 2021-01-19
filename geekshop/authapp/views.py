@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core.mail import send_mail
+from django.db import transaction
 from django.shortcuts import render, HttpResponseRedirect
 from django.contrib import auth, messages
 from django.urls import reverse
@@ -149,18 +150,21 @@ def edit(request):
     #         return self.form_invalid(form)
 
 
+@transaction.atomic
 def profile(request):
 
     if request.method == 'POST':
         form = ShopUserProfileForm(request.POST, request.FILES, instance=request.user)
-        if form.is_valid():
+        profile_form = ShopUserProfileEditForm(request.POST, instance=request.user.shopuserprofile)
+        if form.is_valid() and profile_form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('auth:profile'))
     else:
         form = ShopUserProfileForm(instance=request.user)
+        profile_form = ShopUserProfileEditForm(instance=request.user.shopuserprofile)
 
     # baskets = Basket.objects.filter(user=request.user)
     title = 'Профиль ' + request.user.username
-    content = {'title': title, 'form': form}
+    content = {'title': title, 'form': form, 'profile_form': profile_form}
     return render(request, 'authapp/profile.html', content)
 

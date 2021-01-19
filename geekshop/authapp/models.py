@@ -10,7 +10,7 @@ from django.dispatch import receiver
 
 class ShopUser(AbstractUser):
     avatar = models.ImageField(upload_to='user_avatars', blank=True, verbose_name='Аватар',
-                               default='/user_avatars/4x4.jpg')
+                               default='user_avatars/4x4.jpg')
     # age = models.PositiveIntegerField(verbose_name='Возраст', default=18)
     birthday = models.DateField(verbose_name='День рождения', default=date(year=2000, month=1, day=1))
     activation_key = models.CharField(max_length=128, blank=True, null=True)
@@ -42,3 +42,4 @@ class ShopUserProfile(models.Model):
     @receiver(post_save, sender=ShopUser)
     def save_user_profile(sender, instance, **kwargs):
         instance.shopuserprofile.save()
+        print('save shopuserprofile', instance, instance.shopuserprofile.gender)
