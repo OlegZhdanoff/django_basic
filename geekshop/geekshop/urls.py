@@ -26,7 +26,8 @@ urlpatterns = [
     path('auth/', include('authapp.urls', namespace='auth')),
     path('baskets/', include('basketapp.urls', namespace='baskets')),
     path('admin-staff/', include('adminapp.urls', namespace='admin_staff')),
-    path('', include('social_django.urls', namespace='social'))
+    path('', include('social_django.urls', namespace='social')),
+    path('order', include('ordersapp.urls', namespace='order'))
 ]
 
 if settings.DEBUG:
