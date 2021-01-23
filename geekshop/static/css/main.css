@@ -1,3 +1,7 @@
 .dropdown-menu > a {
     color: black !important;
 }
+
+.btn .form-control > a {
+    color: black!important;
+}
