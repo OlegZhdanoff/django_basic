@@ -144,14 +144,15 @@ class UserProfileView(UpdateView):
         Handle POST requests: instantiate a form instance with the passed
         POST variables and then check if it's valid.
         """
-        self.object = None
-        form_class = self.get_form_class()
-        form = self.get_form(form_class)
+        # self.object = None
+        # form_class = self.get_form_class()
+        # form = self.get_form(form_class)
+        form = ShopUserProfileForm(request.POST, request.FILES, instance=request.user)
 
         profile_form = ShopUserProfileEditForm(self.request.POST, instance=self.request.user.shopuserprofile)
         print(form)
         print(form.is_valid(), profile_form.is_valid())
-        print(form_class)
+        # print(form_class)
         form.is_valid()
         # form.errors.pop('username')
         if form.is_valid() and profile_form.is_valid():
@@ -165,12 +166,12 @@ class UserProfileView(UpdateView):
         with associated books and then redirects to a success page.
         """
         self.object = form.save()
-        profile_form.instance = self.object.shopuserprofile
+        # profile_form.instance = self.object.shopuserprofile
         print(self.object.shopuserprofile)
         print(self.object)
         print(self.request.user)
-        profile_form.instance.user = self.request.user
-        profile_form.save()
+        # profile_form.instance.user = self.request.user
+        # profile_form.save()
 
         return HttpResponseRedirect(self.get_success_url())
 
