@@ -16,7 +16,7 @@ class BasketQuerySet(models.QuerySet):
 
 class Basket(models.Model):
      # привязываем свой менеджер объектов к модели, чтобы правильно работал метод удаления QuerySet
-    object = BasketQuerySet.as_manager()
+    # object = BasketQuerySet.as_manager()
 
     user = models.ForeignKey(ShopUser, on_delete=models.CASCADE)
     product = models.ForeignKey(Products, on_delete=models.CASCADE)
