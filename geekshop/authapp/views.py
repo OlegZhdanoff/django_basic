@@ -187,7 +187,6 @@ class UserProfileView(UpdateView):
 
 @transaction.atomic
 def profile(request):
-    # TODO: переделать на CBV
 
     if request.method == 'POST':
         form = ShopUserProfileForm(request.POST, request.FILES, instance=request.user)
