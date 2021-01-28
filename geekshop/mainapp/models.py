@@ -25,6 +25,7 @@ class Products(models.Model):
     description = models.TextField(verbose_name='Описание')
     is_visible = models.BooleanField(default=False, verbose_name='Видимость')
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, db_constraint=False, default=1)
+    quantity = models.PositiveIntegerField(verbose_name='количество', default=0)
 
     def __str__(self):
         return self.name

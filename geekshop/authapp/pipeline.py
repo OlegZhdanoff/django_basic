@@ -1,8 +1,11 @@
+import os
 from collections import OrderedDict
 from datetime import datetime
 from urllib.parse import urlencode, urlunparse
+import urllib.request
 
 import requests
+from django.conf import settings
 from django.utils import timezone
 from social_core.exceptions import AuthForbidden
 
@@ -20,7 +23,7 @@ def save_user_profile(backend, user, response, *args, **kwargs):
                           'api.vk.com',
                           '/method/users.get',
                           None,
-                          urlencode(OrderedDict(fields=','.join(('bdate', 'sex', 'about')),
+                          urlencode(OrderedDict(fields=','.join(('bdate', 'sex', 'about', 'photo_max')),
                                                 access_token=response['access_token'],
                                                 v='5.92')),
                           None
@@ -47,8 +50,10 @@ def save_user_profile(backend, user, response, *args, **kwargs):
         user.birthday = bdate
     if response['email']:
         user.email = response['email']
-    if response['user_photo']:
-        user.avatar = response['user_photo']
+    if data['photo_max']:
+        urllib.request.urlretrieve(data['photo_max'], os.path.join(settings.BASE_DIR, 'media', 'user_avatars',
+                                                                   f'{user.pk}.jpg'))
+        user.avatar = f'user_avatars/{user.pk}.jpg'
     user.save()
     print(user, response)
 #     сделать вытягивание аватарки и подстановки в профиль

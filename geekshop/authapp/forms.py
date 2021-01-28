@@ -3,6 +3,8 @@ import random
 
 import bcrypt as bcrypt
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
+from django.forms import BaseModelForm
+
 from authapp.models import ShopUser, ShopUserProfile
 from django import forms
 
@@ -74,7 +76,7 @@ class ShopUserEditForm(UserChangeForm):
 class ShopUserProfileForm(UserChangeForm):
     class Meta:
         model = ShopUser
-        fields = ('first_name', 'last_name', 'avatar', 'username', 'email', 'birthday')
+        fields = ('first_name', 'last_name', 'avatar', 'username', 'email', 'birthday', 'password')
 
     def __init__(self, *args, **kwargs):
         super(ShopUserProfileForm, self).__init__(*args, **kwargs)
@@ -82,6 +84,8 @@ class ShopUserProfileForm(UserChangeForm):
         self.fields['email'].widget.attrs['readonly'] = True
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control py-4'
+            if field_name == 'password':
+                field.widget = forms.HiddenInput()
 
     def clean_birthday(self):
         data = self.cleaned_data['birthday']
@@ -99,4 +103,4 @@ class ShopUserProfileEditForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ShopUserProfileEditForm, self).__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
-            field.widget.attrs['class'] = 'form-control py-4'
+            field.widget.attrs['class'] = 'form-control'

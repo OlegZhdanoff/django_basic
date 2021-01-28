@@ -119,39 +119,75 @@ def edit(request):
     return render(request, 'authapp/edit.html', content)
 
 
-# class UserProfileView(UpdateView):
-#     model = ShopUser
-#     form_class = ShopUserProfileForm
-#     success_url = reverse_lazy('mainapp:index')
-#     template_name = 'authapp/profile.html'
-#
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['title'] = 'Профиль ' + self.request.user.username
-#         context['profile_form'] = ShopUserProfileEditForm(self.request.POST, instance=self.request.user.shopuserprofile)
-#         return context
+class UserProfileView(UpdateView):
+    model = ShopUser
+    form_class = ShopUserProfileForm
+    success_url = reverse_lazy('mainapp:index')
+    template_name = 'authapp/profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Профиль ' + self.request.user.username
+        if self.request.POST:
+            context['profile_form'] = ShopUserProfileEditForm(self.request.POST, instance=self.request.user.shopuserprofile)
+        else:
+            context['profile_form'] = ShopUserProfileEditForm(instance=self.request.user.shopuserprofile)
+
+        return context
 
     # def post(self, request, *args, **kwargs):
     #     self.object = self.get_object()
     #     return super().post(request, *args, **kwargs)
-    #
-    # def post(self, request, *args, **kwargs):
-    #     """
-    #     Handle POST requests: instantiate a form instance with the passed
-    #     POST variables and then check if it's valid.
-    #     """
-    #     profile_form = ShopUserProfileEditForm(self.request.POST, instance=self.request.user.shopuserprofile)
-    #     # and profile_form.is_valid():
-    #     form = self.get_form()
-    #     if form.is_valid():
-    #         return self.form_valid(form)
-    #     else:
-    #         return self.form_invalid(form)
+
+    def post(self, request, *args, **kwargs):
+        """
+        Handle POST requests: instantiate a form instance with the passed
+        POST variables and then check if it's valid.
+        """
+        # self.object = None
+        # form_class = self.get_form_class()
+        # form = self.get_form(form_class)
+        form = ShopUserProfileForm(request.POST, request.FILES, instance=request.user)
+
+        profile_form = ShopUserProfileEditForm(self.request.POST, instance=self.request.user.shopuserprofile)
+        print(form)
+        print(form.is_valid(), profile_form.is_valid())
+        # print(form_class)
+        form.is_valid()
+        # form.errors.pop('username')
+        if form.is_valid() and profile_form.is_valid():
+            return self.form_valid(form, profile_form)
+        else:
+            return self.form_invalid(form, profile_form)
+
+    def form_valid(self, form, profile_form):
+        """
+        Called if all forms are valid. Creates a Author instance along
+        with associated books and then redirects to a success page.
+        """
+        self.object = form.save()
+        # profile_form.instance = self.object.shopuserprofile
+        print(self.object.shopuserprofile)
+        print(self.object)
+        print(self.request.user)
+        # profile_form.instance.user = self.request.user
+        # profile_form.save()
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form, profile_form):
+        """
+        Called if whether a form is invalid. Re-renders the context
+        data with the data-filled forms and errors.
+        """
+        return self.render_to_response(
+            self.get_context_data(form=form, profile_form=profile_form)
+        )
 
 
 @transaction.atomic
 def profile(request):
+    # TODO: переделать на CBV
 
     if request.method == 'POST':
         form = ShopUserProfileForm(request.POST, request.FILES, instance=request.user)
