@@ -32,11 +32,11 @@ class ProductCategoryAdmin(admin.ModelAdmin):
 
 
 class ProductsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'price', 'category', 'is_visible')
+    list_display = ('id', 'name', 'price', 'quantity', 'category', 'is_visible')
     list_display_links = ('id', 'name')
     search_fields = ('name', 'category')
     list_filter = ('category', 'is_visible')
-    list_editable = ('price', 'category', 'is_visible')
+    list_editable = ('price', 'quantity', 'category', 'is_visible')
 
     # def get_urls(self):
     #     urls = super(MenuOrderAdmin, self).get_urls()

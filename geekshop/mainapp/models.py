@@ -33,3 +33,7 @@ class Products(models.Model):
     class Meta:
         verbose_name = 'Товар'
         verbose_name_plural = 'Товары'
+
+    @staticmethod
+    def get_items():
+        return Products.objects.filter(is_visible=True).order_by('category', 'name')
