@@ -25,14 +25,16 @@ def load_product_to_db(content: dict, AnyModel: models.Model, CategoriesClass: m
     for obj in content['categories']:
         try:
             CategoriesClass.objects.create(**create_new_obj(obj, CategoriesClass))
-        except IntegrityError:
+        except IntegrityError as e:
+            print(e)
             continue
     for obj in content['objects_list']:
         new_obj = create_new_obj(obj, AnyModel)
         new_obj['category'] = CategoriesClass.objects.get(title=new_obj['category'])
         try:
             AnyModel.objects.create(**new_obj)
-        except IntegrityError:
+        except IntegrityError as e:
+            print(e)
             continue
 
 
