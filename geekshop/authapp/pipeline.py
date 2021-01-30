@@ -56,4 +56,3 @@ def save_user_profile(backend, user, response, *args, **kwargs):
         user.avatar = f'user_avatars/{user.pk}.jpg'
     user.save()
     print(user, response)
-#     сделать вытягивание аватарки и подстановки в профиль
