@@ -19,7 +19,7 @@ from django.shortcuts import get_object_or_404
 class UserLoginView(LoginView):
     authentication_form = ShopUserLoginForm
     # redirect_authenticated_user = True
-    success_url = reverse('mainapp:products')
+    success_url = reverse_lazy('mainapp:products')
     template_name = 'authapp/login.html'
 
 
