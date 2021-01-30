@@ -209,8 +209,8 @@ SOCIAL_AUTH_VK_OAUTH2_KEY = VK['SOCIAL_AUTH_VK_OAUTH2_KEY']
 SOCIAL_AUTH_VK_OAUTH2_SECRET = VK['SOCIAL_AUTH_VK_OAUTH2_SECRET']
 
 LOGIN_ERROR_URL = '/'
-LOGIN_URL = reverse_lazy('mainapp:products')
-# /auth/login/
+# LOGIN_URL = reverse_lazy('mainapp:products')
+LOGIN_URL = '/auth/login/'
 
 SOCIAL_AUTH_VK_OAUTH2_IGNORE_DEFAULT_SCOPE = True
 SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email']
