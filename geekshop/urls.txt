@@ -1,2 +1,6 @@
-http://37.140.195.5/
+http://37.140.195.5/auth/login/ POST username=admin&password=123
 http://37.140.195.5/products/
+http://37.140.195.5/auth/profile/3/
+http://37.140.195.5/order/update/2/
+http://37.140.195.5/order/detail/2/
+http://37.140.195.5/order/
