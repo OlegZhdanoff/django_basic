@@ -1,6 +1,4 @@
 http://37.140.195.5/
 http://37.140.195.5/products/
 http://37.140.195.5/order/
-http://37.140.195.5/auth/profile/1/
-http://37.140.195.5/order/update/3/
-http://37.140.195.5/order/detail/1/
+
