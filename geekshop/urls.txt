@@ -1,2 +1,17 @@
-http://37.140.195.5/auth/login/ POST username=admin&password=123
+http://37.140.195.5/
+http://37.140.195.5//admin-staff/
+http://37.140.195.5/admin-staff/product_category/
+http://37.140.195.5/admin-staff/product_category/create/
+http://37.140.195.5/admin-staff/product_category/update/1/
+http://37.140.195.5/admin-staff/products/
+http://37.140.195.5/admin-staff/products/create/
+http://37.140.195.5/admin-staff/products/update/1/
+http://37.140.195.5/admin-staff/users/
+http://37.140.195.5/auth/profile/1/
+http://37.140.195.5/order/
+http://37.140.195.5/order/create/
+http://37.140.195.5/order/detail/1/
+http://37.140.195.5/order/update/1/
+http://37.140.195.5/products/
+http://37.140.195.5/products/1/
 
