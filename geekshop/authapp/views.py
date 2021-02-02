@@ -19,34 +19,32 @@ from authapp.models import ShopUser, ShopUserProfile
 from django.shortcuts import get_object_or_404
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class UserLoginView(LoginView):
-    authentication_form = ShopUserLoginForm
-    # redirect_authenticated_user = True
-    success_url = reverse_lazy('mainapp:products')
-    template_name = 'authapp/login.html'
+# @method_decorator(csrf_exempt, name='dispatch')
+# class UserLoginView(LoginView):
+#     authentication_form = ShopUserLoginForm
+#     # redirect_authenticated_user = True
+#     success_url = reverse_lazy('mainapp:products')
+#     template_name = 'authapp/login.html'
 
 
-# def login(request):
-#     if request.method == 'POST':
-#         form = ShopUserLoginForm(data=request.POST)
-#         if form.is_valid():
-#             username = request.POST['username']
-#             password = request.POST['password']
-#             user = auth.authenticate(username=username, password=password)
-#             if user and user.is_active:
-#                 auth.login(request, user)
-#                 return HttpResponseRedirect(reverse('mainapp:index'))
-#     else:
-#         form = ShopUserLoginForm()
-#     context = {'form': form}
-#     return render(request, 'authapp/login.html', context)
+def login(request):
+    if request.method == 'POST':
+        form = ShopUserLoginForm(data=request.POST)
+        if form.is_valid():
+            username = request.POST['username']
+            password = request.POST['password']
+            user = auth.authenticate(username=username, password=password)
+            if user and user.is_active:
+                auth.login(request, user)
+                return HttpResponseRedirect(reverse('mainapp:index'))
+    else:
+        form = ShopUserLoginForm()
+    context = {'form': form}
+    return render(request, 'authapp/login.html', context)
 
 
-# можно ли реализовать этот контроллер через CBV?
 def verify(request, email, activation_key):
     try:
-        # здесь почему то не могу использовать get_object_or_404, ругается что нет такого метода
         user = ShopUser.objects.get(email=email)
         if user.activation_key == activation_key and not user.is_activation_key_expired():
             user.is_active = True
