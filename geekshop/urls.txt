@@ -1,2 +1,2 @@
-http://37.140.195.5/login/
+http://37.140.195.5/auth/login/
 
