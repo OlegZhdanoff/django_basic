@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.db import transaction
 from django.shortcuts import render, HttpResponseRedirect
@@ -6,6 +7,8 @@ from django.contrib import auth, messages
 from django.urls import reverse
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.edit import CreateView, UpdateView
 
 from basketapp.models import Basket
@@ -16,6 +19,7 @@ from authapp.models import ShopUser, ShopUserProfile
 from django.shortcuts import get_object_or_404
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class UserLoginView(LoginView):
     authentication_form = ShopUserLoginForm
     # redirect_authenticated_user = True
