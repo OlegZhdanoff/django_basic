@@ -5,6 +5,8 @@ from django.forms import inlineformset_factory
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse, reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 
 from basketapp.models import Basket
@@ -13,6 +15,7 @@ from ordersapp.forms import OrderItemForm
 from ordersapp.models import Order, OrderItem
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class OrderList(ListView):
     model = Order
 
