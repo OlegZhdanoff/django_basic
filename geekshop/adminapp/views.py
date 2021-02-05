@@ -124,7 +124,7 @@ class ProductListView(ListView, UserPassesTest):
     paginate_by = settings.ADMIN_PAGE_ELEMS
 
     def get_queryset(self):
-        return Products.objects.all().order_by('name')
+        return Products.objects.all().order_by('name').select_related()
 
 
 class ProductCreateView(CreateView, UserPassesTest):
