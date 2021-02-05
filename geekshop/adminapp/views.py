@@ -57,7 +57,7 @@ class UsersListView(ListView, UserPassesTest):
     paginate_by = settings.ADMIN_PAGE_ELEMS
 
     def get_queryset(self):
-        return ShopUser.objects.all().order_by('username')
+        return ShopUser.objects.all().order_by('username').select_related()
 
 
 # @user_passes_test(lambda u: u.is_superuser)

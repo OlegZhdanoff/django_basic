@@ -30,7 +30,7 @@ class Order (models.Model):
     updated_at = models.DateTimeField(auto_now=True, verbose_name='обновлен')
 
     status = models.CharField(verbose_name='статус', choices=ORDER_STATUSES, max_length=3, default=FORMING)
-    is_active = models.BooleanField(verbose_name='активен', default=True)
+    is_active = models.BooleanField(verbose_name='активен', default=True, db_index=True)
 
     class Meta:
         verbose_name = 'заказ'
