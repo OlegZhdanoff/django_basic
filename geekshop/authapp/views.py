@@ -129,11 +129,11 @@ class UserProfileView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Профиль ' + self.request.user.username.select_related()
+        context['title'] = 'Профиль ' + self.request.user.username
         if self.request.POST:
-            context['profile_form'] = ShopUserProfileEditForm(self.request.POST, instance=self.request.user.shopuserprofile.select_related())
+            context['profile_form'] = ShopUserProfileEditForm(self.request.POST, instance=self.request.user.shopuserprofile)
         else:
-            context['profile_form'] = ShopUserProfileEditForm(instance=self.request.user.shopuserprofile.select_related())
+            context['profile_form'] = ShopUserProfileEditForm(instance=self.request.user.shopuserprofile)
 
         return context
 
