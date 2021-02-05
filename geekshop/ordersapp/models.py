@@ -68,4 +68,4 @@ class OrderItem(models.Model):
 
     @staticmethod
     def get_item(pk):
-        return OrderItem.objects.filter(pk=pk).first()
+        return OrderItem.objects.filter(pk=pk).first().select_related()
