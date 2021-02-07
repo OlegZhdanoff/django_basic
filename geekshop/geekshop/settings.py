@@ -50,8 +50,21 @@ INSTALLED_APPS = [
     'django_extensions',
 ]
 
-# 'django.middleware.csrf.CsrfViewMiddleware',
+if os.name == 'posix':
+    CACHE_MIDDLEWARE_ALIAS = 'default'
+    CACHE_MIDDLEWARE_SECONDS = 120
+    CACHE_MIDDLEWARE_KEY_PREFIX = 'geekshop'
 
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+            'LOCATION': '127.0.0.1:11211',
+        }
+    }
+
+LOW_CACHE = True
+
+# 'django.middleware.csrf.CsrfViewMiddleware',
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -212,7 +225,6 @@ SOCIAL_AUTH_VK_OAUTH2_KEY = VK['SOCIAL_AUTH_VK_OAUTH2_KEY']
 SOCIAL_AUTH_VK_OAUTH2_SECRET = VK['SOCIAL_AUTH_VK_OAUTH2_SECRET']
 
 LOGIN_ERROR_URL = '/'
-# LOGIN_URL = reverse_lazy('mainapp:products')
 LOGIN_URL = '/auth/login/'
 LOGIN_REDIRECT_URL = '/'
 

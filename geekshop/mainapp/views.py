@@ -5,6 +5,19 @@ from mainapp.models import Products, ProductCategory
 from django.conf import settings
 from django.views.generic.list import ListView
 from django.shortcuts import get_object_or_404
+from django.core.cache import cache
+
+
+def get_links_menu():
+    if settings.LOW_CACHE:
+        key = 'links_menu'
+        links_menu = cache.get(key)
+        if links_menu is None:
+            links_menu = ProductCategory.objects.filter(is_visible=True)
+            cache.set(key, links_menu)
+        return links_menu
+    else:
+        return ProductCategory.objects.filter(is_visible=True)
 
 
 def index(request):
@@ -28,7 +41,7 @@ class ProductListView(ListView):
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
         # Add in the publisher
-        context['categories'] = ProductCategory.objects.filter(is_visible=True)
+        context['categories'] = get_links_menu()
         return context
 
 
