@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.utils.functional import cached_property
 
 from mainapp.models import Products
 
@@ -37,18 +38,21 @@ class Order (models.Model):
         verbose_name_plural = 'заказы'
         ordering = ('-created_at',)
 
-    def get_total_quantity(self):
+    @cached_property
+    def get_items_cached(self):
         # выбираем все продукты нашего заказа, связанные через related в модели OrderItem
-        items = self.orderitems.select_related()
+        return self.orderitems.select_related()
+
+    def get_total_quantity(self):
+        items = self.get_items_cached
         return sum([i.quantity for i in items])
 
     def get_total_cost(self):
-        # выбираем все продукты нашего заказа, связанные через related в модели OrderItem
-        items = self.orderitems.select_related()
+        items = self.get_items_cached
         return sum([i.quantity * i.product.price for i in items])
 
     def delete(self):
-        for item in self.orderitems.select_related():
+        for item in self.get_items_cached:
             item.product.quantity += item.quantity
             item.product.save()
 
