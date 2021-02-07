@@ -59,6 +59,13 @@ class Order (models.Model):
         self.is_active = False
         self.save()
 
+    def get_summary(self):
+        items = self.get_items_cached
+        return {
+            'total_cost': sum([i.quantity * i.product.price for i in items]),
+            'total_quantity': sum([i.quantity for i in items])
+        }
+
 
 class OrderItem(models.Model):
     # related_name='orderitems' - можем обращаться из модели Order, ко всем объектам OrderItems, привязанных к
