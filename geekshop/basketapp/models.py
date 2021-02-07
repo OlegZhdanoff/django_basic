@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils.functional import cached_property
+
 from authapp.models import ShopUser
 
 from mainapp.models import Products
@@ -18,13 +20,17 @@ class Basket(models.Model):
      # привязываем свой менеджер объектов к модели, чтобы правильно работал метод удаления QuerySet
     # object = BasketQuerySet.as_manager()
 
-    user = models.ForeignKey(ShopUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(ShopUser, on_delete=models.CASCADE, related_name='basket')
     product = models.ForeignKey(Products, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=0, verbose_name='Количество')
     created_timestamp = models.DateTimeField(auto_now_add=True, verbose_name='Время')
 
     def __str__(self):
         return f'Корзина для {self.user.username} | Продукт {self.product.name}'
+
+    @cached_property
+    def get_items_cached(self):
+        return self.user.basket.select_related()
 
     def sum(self):
         return self.quantity * self.product.price
@@ -33,10 +39,12 @@ class Basket(models.Model):
         return Basket.objects.filter(user=self.user)
 
     def total_sum(self):
-        return sum([basket.sum() for basket in self.get_user_baskets()])
+        # return sum([basket.sum() for basket in self.get_user_baskets()])
+        return sum([basket.sum() for basket in self.get_items_cached])
 
     def total_qty(self):
-        return sum([basket.quantity for basket in self.get_user_baskets()])
+        # return sum([basket.quantity for basket in self.get_user_baskets()])
+        return sum([basket.quantity for basket in self.get_items_cached])
 
     def delete(self, *args, **kwargs):
         self.product.quantity += self.quantity
@@ -45,4 +53,4 @@ class Basket(models.Model):
 
     @staticmethod
     def get_item(pk):
-        return Basket.objects.filter(pk=pk).first()
+        return Basket.objects.filter(pk=pk).first().select_related()
