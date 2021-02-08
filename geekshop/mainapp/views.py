@@ -28,14 +28,21 @@ class ProductListView(ListView):
     model = Products
     template_name = 'mainapp/products.html'
     paginate_by = settings.PRODUCT_PAGE_ELEMS
-    category = 6
+    # category = None
 
     def get_queryset(self):
         if 'category_id' in self.kwargs.keys():
-            self.category = get_object_or_404(ProductCategory, pk=self.kwargs['category_id'])
+            if settings.LOW_CACHE:
+                key = f'category_{self.kwargs["category_id"]}'
+                category = cache.get(key)
+                if category is None:
+                    category = get_object_or_404(ProductCategory, pk=self.kwargs['category_id'])
+                    cache.set(key, category)
+            else:
+                category = get_object_or_404(ProductCategory, pk=self.kwargs['category_id'])
         else:
             return Products.objects.filter(is_visible=True).order_by('price')
-        return Products.objects.filter(category=self.category, is_visible=True).order_by('price')
+        return Products.objects.filter(category=category, is_visible=True).order_by('price')
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
