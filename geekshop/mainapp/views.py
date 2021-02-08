@@ -41,8 +41,24 @@ class ProductListView(ListView):
             else:
                 category = get_object_or_404(ProductCategory, pk=self.kwargs['category_id'])
         else:
-            return Products.objects.filter(is_visible=True).order_by('price')
-        return Products.objects.filter(category=category, is_visible=True).order_by('price')
+            if settings.LOW_CACHE:
+                key = f'products_ordered_by_price_all'
+                products = cache.get(key)
+                if products is None:
+                    products = Products.objects.filter(is_visible=True).order_by('price')
+                    cache.set(key, products)
+                return products
+            else:
+                return Products.objects.filter(is_visible=True).order_by('price')
+        if settings.LOW_CACHE:
+            key = f'products_in_category_ordered_by_price_{category.pk}'
+            products = cache.get(key)
+            if products is None:
+                products = Products.objects.filter(category=category, is_visible=True).order_by('price')
+                cache.set(key, products)
+            return products
+        else:
+            return Products.objects.filter(category=category, is_visible=True).order_by('price')
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
