@@ -200,9 +200,10 @@ def db_profile_by_type(prefix, type, queries):
 @receiver(pre_save, sender=ProductCategory)
 def product_is_active_update_productcategory_save(sender, instance, **kwargs):
     if instance.pk:
-        if instance.is_visible:
-            instance.products_set.update(is_visible=True)
-        else:
-            instance.products_set.update(is_visible=False)
+        instance.products_set.update(is_visible=instance.is_visible)
+        # if instance.is_visible:
+        #     instance.products_set.update(is_visible=True)
+        # else:
+        #     instance.products_set.update(is_visible=False)
 
         db_profile_by_type(sender, 'UPDATE', connection.queries)
