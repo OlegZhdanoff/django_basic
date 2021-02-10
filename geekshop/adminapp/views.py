@@ -192,7 +192,8 @@ class CategoryDeleteView(DeleteView, UserPassesTest):
 
 
 def db_profile_by_type(prefix, type, queries):
-    update_queries = list(filter(lambda x: type in x['sql'], queries))
+    # update_queries = list(filter(lambda x: type in x['sql'], queries))
+    update_queries = [query for query in queries if type in query['sql']]
     print(f'db_profile {type} for {prefix}:')
     [print(query['sql']) for query in update_queries]
 
