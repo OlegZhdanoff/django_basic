@@ -24,10 +24,13 @@ class ProductCreateForm(forms.ModelForm):
 
 
 class ProductCategoryForm(forms.ModelForm):
+    discount = forms.IntegerField(label='скидка', required=False,
+                                  min_value=0, max_value=90, initial=0)
+
     class Meta:
         model = models.ProductCategory
         # fields = '__all__'
-        fields = ('title', 'short_description', 'is_visible')
+        fields = ('title', 'short_description', 'discount', 'is_visible')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

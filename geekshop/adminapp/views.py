@@ -1,4 +1,5 @@
 from django.db import connection
+from django.db.models import F
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.shortcuts import render, HttpResponseRedirect
@@ -177,6 +178,15 @@ class CategoryUpdateView(UpdateView, UserPassesTest):
     template_name = 'adminapp/admin-product_category-update-delete.html'
     success_url = reverse_lazy('admin_staff:admin_product_category')
     form_class = ProductCategoryForm
+
+    def form_valid(self, form):
+        if 'discount' in form.cleaned_data:
+            discount = form.cleaned_data['discount']
+            if discount:
+                self.object.products_set.update(price=F('price') * (1 - discount / 100))
+                db_profile_by_type(self.__class__, 'UPDATE', connection.queries)
+
+        return super().form_valid(form)
 
 
 class CategoryDeleteView(DeleteView, UserPassesTest):
