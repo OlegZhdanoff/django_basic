@@ -76,7 +76,7 @@ class ShopUserEditForm(UserChangeForm):
 class ShopUserProfileForm(UserChangeForm):
     class Meta:
         model = ShopUser
-        fields = ('first_name', 'last_name', 'avatar', 'username', 'email', 'birthday', 'password')
+        fields = ('first_name', 'last_name', 'avatar', 'username', 'email', 'birthday', 'password', 'activation_key')
 
     def __init__(self, *args, **kwargs):
         super(ShopUserProfileForm, self).__init__(*args, **kwargs)
