@@ -1,4 +1,5 @@
 from django.db import connection
+from django.db.models import F
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.shortcuts import render, HttpResponseRedirect
@@ -178,6 +179,15 @@ class CategoryUpdateView(UpdateView, UserPassesTest):
     success_url = reverse_lazy('admin_staff:admin_product_category')
     form_class = ProductCategoryForm
 
+    def form_valid(self, form):
+        if 'discount' in form.cleaned_data:
+            discount = form.cleaned_data['discount']
+            if discount:
+                self.object.products_set.update(price=F('price') * (1 - discount / 100))
+                db_profile_by_type(self.__class__, 'UPDATE', connection.queries)
+
+        return super().form_valid(form)
+
 
 class CategoryDeleteView(DeleteView, UserPassesTest):
     model = ProductCategory
@@ -192,7 +202,8 @@ class CategoryDeleteView(DeleteView, UserPassesTest):
 
 
 def db_profile_by_type(prefix, type, queries):
-    update_queries = list(filter(lambda x: type in x['sql'], queries))
+    # update_queries = list(filter(lambda x: type in x['sql'], queries))
+    update_queries = [query for query in queries if type in query['sql']]
     print(f'db_profile {type} for {prefix}:')
     [print(query['sql']) for query in update_queries]
 
@@ -200,9 +211,10 @@ def db_profile_by_type(prefix, type, queries):
 @receiver(pre_save, sender=ProductCategory)
 def product_is_active_update_productcategory_save(sender, instance, **kwargs):
     if instance.pk:
-        if instance.is_visible:
-            instance.products_set.update(is_visible=True)
-        else:
-            instance.products_set.update(is_visible=False)
+        instance.products_set.update(is_visible=instance.is_visible)
+        # if instance.is_visible:
+        #     instance.products_set.update(is_visible=True)
+        # else:
+        #     instance.products_set.update(is_visible=False)
 
         db_profile_by_type(sender, 'UPDATE', connection.queries)

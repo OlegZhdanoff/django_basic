@@ -47,7 +47,7 @@ class ShopUserRegisterForm(UserCreationForm):
         # user.activation_key = bcrypt.hashpw(str(random.random()).encode('utf8'), bcrypt.gensalt())
         salt = hashlib.sha1(str(random.random()).encode('utf8')).hexdigest()[:6]
         user.activation_key = hashlib.sha1((user.email + salt).encode('utf8')).hexdigest()
-        print(user.activation_key)
+        print('activation_key', user.activation_key)
 
         return user
 
@@ -55,7 +55,7 @@ class ShopUserRegisterForm(UserCreationForm):
 class ShopUserEditForm(UserChangeForm):
     class Meta:
         model = ShopUser
-        fields = ('username', 'first_name', 'last_name', 'email', 'birthday', 'avatar', 'password')
+        fields = ('username', 'first_name', 'last_name', 'email', 'birthday', 'avatar', 'password', 'activation_key')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -76,7 +76,7 @@ class ShopUserEditForm(UserChangeForm):
 class ShopUserProfileForm(UserChangeForm):
     class Meta:
         model = ShopUser
-        fields = ('first_name', 'last_name', 'avatar', 'username', 'email', 'birthday', 'password')
+        fields = ('first_name', 'last_name', 'avatar', 'username', 'email', 'birthday', 'password', 'activation_key')
 
     def __init__(self, *args, **kwargs):
         super(ShopUserProfileForm, self).__init__(*args, **kwargs)
