@@ -37,10 +37,10 @@ class TestUserAuthTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
         new_user_data = {
-            'username': self.username,
+            'username': 'oklolk',
             'password1': '$XDDyI1zJg3Kww',
             'password2': '$XDDyI1zJg3Kww',
-            'email': self.email,
+            'email': 'jdjdj@jsjs.dd',
             'birthday': datetime.date(1980, 6, 9),
             'first_name': 'Ivanss',
             'last_name': 'Geekss',
