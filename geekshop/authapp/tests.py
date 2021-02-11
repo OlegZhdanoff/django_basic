@@ -1,5 +1,6 @@
 import datetime
 
+from django.conf import settings
 from django.test import TestCase, Client
 
 from authapp.models import ShopUser
@@ -44,4 +45,11 @@ class TestUserAuthTestCase(TestCase):
         }
 
         response = self.client.post('/auth/register/', data=new_user_data)
+        self.assertEqual(response.status_code, 200)
+
+        new_user = ShopUser.objects.get(username=self.username)
+
+        activation_url = f'{settings.DOMAIN}/auth/verify/{new_user_data["email"]}/{new_user.activation_key}/'
+
+        response = self.client.get(activation_url)
         self.assertEqual(response.status_code, 200)
