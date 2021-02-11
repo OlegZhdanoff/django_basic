@@ -44,4 +44,4 @@ class TestUserAuthTestCase(TestCase):
         }
 
         response = self.client.post('/auth/register/', data=new_user_data)
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
