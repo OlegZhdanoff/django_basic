@@ -210,6 +210,7 @@ EMAIL_USE_SSL = False
 # EMAIL_HOST_USER, EMAIL_HOST_PASSWORD = None, None
 
 DOMAIN = 'http://localhost:8000'
+DOMAIN_NAME = 'http://37.140.195.5/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = 'tmp/email-messages/'

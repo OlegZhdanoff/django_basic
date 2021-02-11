@@ -38,8 +38,8 @@ class TestUserAuthTestCase(TestCase):
 
         new_user_data = {
             'username': self.username,
-            'password1': self.password,
-            'password2': self.password,
+            'password1': '$XDDyI1zJg3K',
+            'password2': '$XDDyI1zJg3K',
             'email': self.email,
             'birthday': datetime.date(1980, 6, 9),
             'first_name': 'Ivan',
@@ -47,11 +47,11 @@ class TestUserAuthTestCase(TestCase):
         }
 
         response = self.client.post('/auth/register/', data=new_user_data)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
 
         new_user = ShopUser.objects.get(username=self.username)
 
-        activation_url = f'{settings.DOMAIN}/auth/verify/{new_user_data["email"]}/{new_user.activation_key}/'
+        activation_url = f'{settings.DOMAIN_NAME}/auth/verify/{new_user_data["email"]}/{new_user.activation_key}/'
 
         print(new_user, new_user.activation_key, activation_url)
         response = self.client.get(activation_url)
