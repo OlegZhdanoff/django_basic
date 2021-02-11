@@ -53,7 +53,7 @@ class TestUserAuthTestCase(TestCase):
 
         new_user = ShopUser.objects.get(username=new_user_data['username'])
 
-        activation_url = f'{settings.DOMAIN_NAME}/auth/verify/{new_user_data["email"]}/{new_user.activation_key}/'
+        activation_url = f'{settings.DOMAIN_NAME}auth/verify/{new_user_data["email"]}/{new_user.activation_key}/'
 
         print(new_user, new_user.activation_key, activation_url)
         response = self.client.get(activation_url)
