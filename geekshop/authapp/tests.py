@@ -41,7 +41,9 @@ class TestUserAuthTestCase(TestCase):
             'password1': self.password,
             'password2': self.password,
             'email': self.email,
-            'birthday': datetime.date(1980, 6, 9)
+            'birthday': datetime.date(1980, 6, 9),
+            'first_name': 'Ivan',
+            'last_name': 'Geek'
         }
 
         response = self.client.post('/auth/register/', data=new_user_data)
