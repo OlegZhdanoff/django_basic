@@ -51,7 +51,7 @@ class TestUserAuthTestCase(TestCase):
         # [print(context) for context in response.context]
         self.assertEqual(response.status_code, 302)
 
-        new_user = ShopUser.objects.get(username=self.username)
+        new_user = ShopUser.objects.get(username=new_user_data['username'])
 
         activation_url = f'{settings.DOMAIN_NAME}/auth/verify/{new_user_data["email"]}/{new_user.activation_key}/'
 
