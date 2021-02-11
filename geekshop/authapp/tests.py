@@ -33,7 +33,7 @@ class TestUserAuthTestCase(TestCase):
 
     def test_user_register(self):
         response = self.client.get('/auth/register/')
-        self.assertFalse(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         new_user_data = {
             'username': self.username,
