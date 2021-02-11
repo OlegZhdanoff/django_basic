@@ -48,7 +48,6 @@ class TestUserAuthTestCase(TestCase):
         }
 
         response = self.client.post('/auth/register/', data=new_user_data)
-        # [print(context) for context in response.context]
         self.assertEqual(response.status_code, 302)
 
         new_user = ShopUser.objects.get(username=new_user_data['username'])
@@ -57,5 +56,20 @@ class TestUserAuthTestCase(TestCase):
 
         print(new_user, new_user.activation_key, activation_url)
         response = self.client.get(activation_url)
-        [print(context) for context in response.context]
+        # [print(context) for context in response.context]
         self.assertEqual(response.status_code, 200)
+
+    def test_user_wrong_register(self):
+        new_user_data = {
+            'username': 'teen',
+            'first_name': 'Мэри',
+            'last_name': 'Поппинс',
+            'password1': '$XDDyI1zJg3Kww',
+            'password2': '$XDDyI1zJg3Kww',
+            'email': 'merypoppins@geekshop.local',
+            'birthday': datetime.date(2020, 6, 9)
+        }
+
+        response = self.client.post('/auth/register/', data=new_user_data)
+        self.assertEqual(response.status_code, 200)
+        self.assertFormError(response, 'register_form', 'birthday', 'Вы слишком молоды!')
