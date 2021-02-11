@@ -51,5 +51,6 @@ class TestUserAuthTestCase(TestCase):
 
         activation_url = f'{settings.DOMAIN}/auth/verify/{new_user_data["email"]}/{new_user.activation_key}/'
 
+        print(activation_url)
         response = self.client.get(activation_url)
         self.assertEqual(response.status_code, 200)
