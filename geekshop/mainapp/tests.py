@@ -32,6 +32,17 @@ class TestMainappTestCase(TestCase):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
 
+    def test_mainapp_shop(self):
+        response = self.client.get('/products/')
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.get('/products/0/')
+        self.assertEqual(response.status_code, 200)
+
+        for category in ProductCategory.objects.all():
+            response = self.client.get(f'/products/{category.pk}/')
+            self.assertEqual(response.status_code, 200)
+
     def tearDown(self):
         call_command('sqlsequencereset', 'mainapp', 'authapp', 'ordersapp', 'basketapp')
 
