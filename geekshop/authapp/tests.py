@@ -48,8 +48,8 @@ class TestUserAuthTestCase(TestCase):
         }
 
         response = self.client.post('/auth/register/', data=new_user_data)
-        [print(context) for context in response.context]
-        self.assertEqual(response.status_code, 200)
+        # [print(context) for context in response.context]
+        self.assertEqual(response.status_code, 302)
 
         new_user = ShopUser.objects.get(username=self.username)
 
