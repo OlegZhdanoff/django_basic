@@ -31,4 +31,17 @@ class TestUserAuthTestCase(TestCase):
         self.assertFalse(response.context['user'].is_anonymous)
         self.assertContains(response, 'Пользователь')
 
+    def test_user_register(self):
+        response = self.client.get('/auth/register/')
+        self.assertFalse(response.status_code, 200)
 
+        new_user_data = {
+            'username': self.username,
+            'password1': self.password,
+            'password2': self.password,
+            'email': self.email,
+            'birthday': datetime.date(1980, 6, 9)
+        }
+
+        response = self.client.post('/auth/register/', data=new_user_data)
+        self.assertEqual(response.status_code, 302)
