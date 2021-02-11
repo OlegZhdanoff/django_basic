@@ -12,8 +12,8 @@ class TestUserAuthTestCase(TestCase):
     password = '123'
 
     def setUp(self):
-        self.admin = ShopUser.objects.create_superuser(self.username, self.email, self.password,
-                                                       birthday=datetime.date(1980, 6, 9))
+        # self.admin = ShopUser.objects.create_superuser(self.username, self.email, self.password,
+        #                                                birthday=datetime.date(1980, 6, 9))
         self.client = Client()
 
     def test_user_login(self):
