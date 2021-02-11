@@ -27,7 +27,7 @@ class TestUserAuthTestCase(TestCase):
         self.assertFalse(response.context['user'].is_anonymous)
         self.assertEqual(response.context['user'], self.admin)
 
-        response = self.client.get('/')
+        response = self.client.get('/products/')
         self.assertFalse(response.context['user'].is_anonymous)
         self.assertContains(response.context['user'], 'Пользователь')
 
