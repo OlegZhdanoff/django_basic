@@ -29,6 +29,6 @@ class TestUserAuthTestCase(TestCase):
 
         response = self.client.get('/')
         self.assertFalse(response.context['user'].is_anonymous)
-        self.assertContains(response.context['user'], self.admin)
+        self.assertContains(response.context['user'], 'Пользователь')
 
 
