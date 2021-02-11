@@ -8,7 +8,7 @@ class TestMainappTestCase(TestCase):
 
     def setUp(self):
         category = ProductCategory.objects.create(
-            name='Test',
+            title='Test',
             is_visible=True
         )
         Products.objects.create(
