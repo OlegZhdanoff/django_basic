@@ -57,4 +57,5 @@ class TestUserAuthTestCase(TestCase):
 
         print(new_user, new_user.activation_key, activation_url)
         response = self.client.get(activation_url)
+        [print(context) for context in response.context]
         self.assertEqual(response.status_code, 200)
