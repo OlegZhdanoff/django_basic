@@ -47,7 +47,7 @@ class ShopUserRegisterForm(UserCreationForm):
         # user.activation_key = bcrypt.hashpw(str(random.random()).encode('utf8'), bcrypt.gensalt())
         salt = hashlib.sha1(str(random.random()).encode('utf8')).hexdigest()[:6]
         user.activation_key = hashlib.sha1((user.email + salt).encode('utf8')).hexdigest()
-        print(user.activation_key)
+        print('activation_key', user.activation_key)
 
         return user
 
